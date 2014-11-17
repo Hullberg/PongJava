@@ -23,7 +23,11 @@ public interface PongModel {
      * and return positions of the various items on the board
      */
     public int getBarPos(BarKey k);
-    public int getBarHeight(BarKey k);
+
+    public int getBarHeight(BarKey k) {
+        return this.
+    }
+
     public Point getBallPos();
 
     /**
