@@ -50,8 +50,27 @@ public class MyPongModel implements PongModel {
      * the items move at the same speed, regardless of the framerate.
      */
     public void compute(Set<Input> input, long delta_t) {
-    		
+	switch(input.key){
+	case LEFT:
+	    if (input.Dir == UP){
+		this.leftPos--;
+	    }
+	    else if (input.Dir == DOWN){
+		this.leftPos++;
+	    }
+	    break;
+	    
+	case RIGHT:
+	    if(input.Dir == UP){
+		this.rightPos--;
+	    }
+	    else if (input.Dir == DOWN){
+		this.rightPos++;
+	    }
+	    break;
 	}
+    		
+    }
     
     /**
      * Method to move the ball. If x below 0 or x above 1200, increaseScore(RIGHT) or increaseScore(LEFT)
