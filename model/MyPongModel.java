@@ -22,8 +22,6 @@ public class MyPongModel implements PongModel {
     private String s1; // Name of player 1
     private String s2; // Name of player 2
 
-    private int ballDirection; // 1 means heading towards player 1, 2 means heading towards player 2.
-
 
 /**
  * The PongModel keeps track of the bars, the ball and the game state.
@@ -38,7 +36,6 @@ public class MyPongModel implements PongModel {
         this.rightHeight = 200;
         this.leftScore = 0;
         this.rightScore = 0;
-        this.ballDirection = 1;
         this.s1 = s1;
         this.s2 = s2;
 
@@ -50,25 +47,26 @@ public class MyPongModel implements PongModel {
      * the items move at the same speed, regardless of the framerate.
      */
     public void compute(Set<Input> input, long delta_t) {
-	switch(input.key){
-	case LEFT:
-	    if (input.Dir == UP){
-		this.leftPos--;
+        for (Input i: input) {
+            BarKey k = i.key;
+	    switch(k){
+	    case LEFT:
+            switch(i.dir) {
+                case UP:
+                    this.leftPos--;
+                case DOWN:
+                    this.leftPos--;
+            }
+	    case RIGHT:
+            switch(i.dir) {
+                case UP:
+                    this.rightPos--;
+                case DOWN:
+                    this.rightPos--;
+            }
+            	       
 	    }
-	    else if (input.Dir == DOWN){
-		this.leftPos++;
-	    }
-	    break;
-	    
-	case RIGHT:
-	    if(input.Dir == UP){
-		this.rightPos--;
-	    }
-	    else if (input.Dir == DOWN){
-		this.rightPos++;
-	    }
-	    break;
-	}
+        }
     		
     }
     
@@ -82,7 +80,8 @@ public class MyPongModel implements PongModel {
         else if (dir == 2)
             this.ballDirection = 1;
         else this.ballDirection = 0;
-    }*/
+    }
+    */
 
     /**
      * getters that take a BarKey LEFT or RIGHT
