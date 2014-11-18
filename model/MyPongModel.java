@@ -7,7 +7,7 @@ import java.awt.Dimension;
 public class MyPongModel implements PongModel {
 
 // Lots of variables
-	private Dimension field; // The background, two-dimensional
+	private Dimension field; // The background, two-dimensional, can use getSize
 	private Point ball; // The x and y position of the ball, can use getX and getY
 
 	private int leftPos; // Height position of left bar
@@ -22,6 +22,7 @@ public class MyPongModel implements PongModel {
     private String s1; // Name of player 1
     private String s2; // Name of player 2
 
+    private int ballDirection; // 1 means heading towards player 1, 2 means heading towards player 2.
 
 
 /**
@@ -37,6 +38,7 @@ public class MyPongModel implements PongModel {
         this.rightHeight = 200;
         this.leftScore = 0;
         this.rightScore = 0;
+        this.ballDirection = 1;
         this.s1 = s1;
         this.s2 = s2;
 
@@ -47,11 +49,22 @@ public class MyPongModel implements PongModel {
      * last compute step -- use this in your time integration to have
      * the items move at the same speed, regardless of the framerate.
      */
-
     public void compute(Set<Input> input, long delta_t) {
     		
 	}
     
+    /**
+     * Method to move the ball. If x below 0 or x above 1200, increaseScore(RIGHT) or increaseScore(LEFT)
+     */
+    /*
+    public void changeDirection(int dir) {
+        if (dir == 1)
+            this.ballDirection = 2;
+        else if (dir == 2)
+            this.ballDirection = 1;
+        else this.ballDirection = 0;
+    }*/
+
     /**
      * getters that take a BarKey LEFT or RIGHT
      * and return positions of the various items on the board
@@ -59,10 +72,8 @@ public class MyPongModel implements PongModel {
 	public int getBarPos(BarKey k) {
     	switch(k) {
     	case LEFT:
-    		// Return position of left barkey.
 	   		return this.leftPos;
     	case RIGHT:
-			// Returns position of right barkey.
     		return this.rightPos;
     	default: 
 			return 0;
@@ -72,10 +83,8 @@ public class MyPongModel implements PongModel {
     public int getBarHeight(BarKey k) {
         switch(k) {
         case LEFT:
-    		// Return height of left barkey
             return this.leftHeight;
 	    case RIGHT:
-	    	// Return height of right barkey.
             return this.rightHeight;
         default:
     		return 0;
@@ -83,7 +92,6 @@ public class MyPongModel implements PongModel {
 	}
 
 	public Point getBallPos() {
-    	// Create different private variables with dimension and point, get the x and y values of the ball.
         return this.ball.getLocation();
     }
 
