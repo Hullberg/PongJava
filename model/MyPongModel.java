@@ -48,21 +48,20 @@ public class MyPongModel implements PongModel {
      */
     public void compute(Set<Input> input, long delta_t) {
         for (Input i: input) {
-            BarKey k = i.key;
-	    switch(k){
+	    switch(i.key){
 	    case LEFT:
             switch(i.dir) {
                 case UP:
                     this.leftPos--;
                 case DOWN:
-                    this.leftPos--;
+                    this.leftPos++;
             }
 	    case RIGHT:
             switch(i.dir) {
                 case UP:
                     this.rightPos--;
                 case DOWN:
-                    this.rightPos--;
+                    this.rightPos++;
             }
             	       
 	    }
