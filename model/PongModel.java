@@ -24,9 +24,8 @@ public interface PongModel {
      */
     public int getBarPos(BarKey k);
 
-    public int getBarHeight(BarKey k) {
-        return this.
-    }
+    public int getBarHeight(BarKey k);
+    
 
     public Point getBallPos();
 

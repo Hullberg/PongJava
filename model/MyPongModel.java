@@ -8,7 +8,7 @@ public class MyPongModel implements PongModel {
 
 // Lots of variables
 	private Dimension field; // The background, two-dimensional
-	private Point ball; // The x and y position of the ball
+	private Point ball; // The x and y position of the ball, can use getX and getY
 
 	private int leftPos; // Height position of left bar
 	private int leftHeight; // The size of the left bar, will increase or decrease after loosing points
@@ -58,14 +58,17 @@ public class MyPongModel implements PongModel {
     	    switch(k)
         	case LEFT:
         		// Return height of left barkey
+                return leftHeight;
 	        case RIGHT:
     	    	// Return height of right barkey.
+                return rightHeight;
         	default:
         		return 0;
 	    }
 
     	public Point getBallPos() {
     		// Create different private variables with dimension and point, get the x and y values of the ball.
+            return this.getLocation();
     	}
 
     /**
@@ -94,7 +97,7 @@ public class MyPongModel implements PongModel {
      * will remain constant forever.
      */
     	public Dimension getFieldSize() {
-
+            return this.getSize();
     	}
 	}
 }
