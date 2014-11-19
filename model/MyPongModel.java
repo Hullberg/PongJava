@@ -49,21 +49,33 @@ public class MyPongModel implements PongModel {
     public void compute(Set<Input> input, long delta_t) {
         for (Input i: input) {
 	    switch(i.key){
-	    case LEFT:
-            switch(i.dir) {
-                case UP:
-                    this.leftPos--;
-                case DOWN:
-                    this.leftPos++;
-            }
-	    case RIGHT:
-            switch(i.dir) {
-                case UP:
-                    this.rightPos--;
-                case DOWN:
-                    this.rightPos++;
-            }
-            	       
+	        case LEFT:
+                switch(i.dir) {
+                    case UP:
+                        if((this.leftPos - (this.leftHeight/2)) >= 0){
+                        this.leftPos-=5;
+                        }
+                        break;
+                    case DOWN:
+                        if((this.leftPos + (this.leftHeight/2)) <= this.field.height){
+                        this.leftPos+=5;
+                    }   
+                        break;
+                    }
+                    break;
+	        case RIGHT:
+                    switch(i.dir) {
+                    case UP:
+                        if((this.rightPos - (this.rightHeight/2)) >= 0){
+                        this.rightPos-=5;
+                    }
+                        break;
+                    case DOWN:
+                        if((this.rightPos + (this.rightHeight/2)) <= this.field.height)
+                        this.rightPos+=5;
+                        break;
+                    }
+            	break;       
 	    }
         }
     		
