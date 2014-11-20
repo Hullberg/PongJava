@@ -28,12 +28,12 @@ public class MyPongModel implements PongModel {
  */
 	public MyPongModel (String s1, String s2) {
 		// Lots of this.variables
-        this.field = new Dimension(1200, 800);
-        this.ball = new Point(600,400);
-        this.leftPos = 400;
-        this.leftHeight = 200;
-        this.rightPos = 400;
-        this.rightHeight = 200;
+        this.field = new Dimension(600, 400);
+        this.ball = new Point(300,200);
+        this.leftPos = 200;
+        this.leftHeight = 100;
+        this.rightPos = 200;
+        this.rightHeight = 100;
         this.leftScore = 0;
         this.rightScore = 0;
         this.s1 = s1;
