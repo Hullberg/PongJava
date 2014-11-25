@@ -22,6 +22,8 @@ public class MyPongModel implements PongModel {
     private String s1; // Name of player 1
     private String s2; // Name of player 2
 
+    private int ballDirectionX;
+    private int ballDirectionY;
 
 /**
  * The PongModel keeps track of the bars, the ball and the game state.
@@ -38,8 +40,17 @@ public class MyPongModel implements PongModel {
         this.rightScore = 0;
         this.s1 = s1;
         this.s2 = s2;
+	this.ballDirectionX = 1;
+	this.ballDirectionY = 0;
+	
 
     }
+
+    public void resetBall(){
+	this.ball.move(300,200);
+	this.ballDirectionX = 1;
+	this.ballDirectionY = 0;
+}
     /**
      * Takes the inputs and applies them to the model, computing one
      * simulation step. delta_t is the time that has passed since the
@@ -78,7 +89,36 @@ public class MyPongModel implements PongModel {
             	break;       
 	    }
         }
-    		
+
+    	moveBall();	
+    }
+
+    public void moveBall(){
+
+	if ((this.ball.getX() <= this.field.getWidth()) && this.ballDirectionX == 1 ){	  
+
+	    if (this.ball.getX() == this.field.getWidth()) {
+		this.ballDirectionX = -1;
+
+    }
+	    this.ball.translate(5,0);
+
+	}
+	else if (this.ball.getX() >= 0){
+	    this.ball.translate(-5,0);
+	    if ((this.ball.getY() <= (this.rightPos + this.rightHeight)) && this.ball.getY() > (this.rightPos - this.rightHeight)){
+		this.ballDirectionX = -1;	
+	    }
+	    else if (this.ball.getX() == this.field.getWidth()){
+		resetBall();
+		this.leftScore++;
+	    }
+	}
+
+	if ((this.ball.getY() <= this.field.getHeight()) && this.ballDirectionY == 1){
+	    this.ball.translate(0,5);
+}
+	
     }
     
     /**
@@ -92,8 +132,8 @@ public class MyPongModel implements PongModel {
             this.ballDirection = 1;
         else this.ballDirection = 0;
     }
+    
     */
-
     /**
      * getters that take a BarKey LEFT or RIGHT
      * and return positions of the various items on the board
