@@ -29,6 +29,8 @@ public class MyPongModel implements PongModel {
     private int xAngle;
     private int yAngle;
 
+    private int speedUpCounter;
+    private int speed;
 
 /**
  * The PongModel keeps track of the bars, the ball and the game state.
@@ -50,23 +52,25 @@ public class MyPongModel implements PongModel {
 
 
         int dir1 = (randomized.nextInt(2) + 1);
-        int dir2 = (randomized.nextInt(3) + 1);
+        int dir2 = (randomized.nextInt(2) + 1);
         int dirX;
         if (dir1 == 2) {dirX = 1;}
         else {dirX = -1;}
         int dirY;
         if (dir2 == 2) {dirY = 1;}
-        else if (dir2 == 1) {dirY = -1;}
-        else {dirY = 0;}
+        else {dirY = -1;}
 
 	    this.ballDirectionX = dirX;
 	    this.ballDirectionY = dirY;
 
         
-        int ang1 = (randomized.nextInt(5) + 0);
+        int ang1 = (randomized.nextInt(5) + 1);
         int ang2 = 10 - ang1;
         this.xAngle = ang2;
         this.yAngle = ang1;
+
+        this.speedUpCounter = 1;
+        this.speed = 1;
 	   
 
     }
@@ -74,7 +78,7 @@ public class MyPongModel implements PongModel {
     public void resetBall(){
     Random randomized = new Random();
     int dir1 = (randomized.nextInt(2) + 1);
-    int dir2 = (randomized.nextInt(3) + 1);
+    int dir2 = (randomized.nextInt(2) + 1);
 
     int dirX;
     if (dir1 == 2) {dirX = 1;}
@@ -82,18 +86,20 @@ public class MyPongModel implements PongModel {
 
     int dirY;
     if (dir2 == 2) {dirY = 1;}
-    else if (dir2 == 1) {dirY = -1;}
-    else {dirY = 0;}
+    else {dirY = -1;}
 
 	this.ball.move(300,200);
 	this.ballDirectionX = dirX;
 	this.ballDirectionY = dirY;
 
     
-    int ang1 = (randomized.nextInt(5) + 0);
+    int ang1 = (randomized.nextInt(5) + 1);
     int ang2 = 10 - ang1;
-    this.xAngle = ang1;
-    this.yAngle = ang2;
+    this.xAngle = ang2;
+    this.yAngle = ang1;
+
+    this.speedUpCounter = 1;
+    this.speed = 1;
     
 }
     /**
@@ -109,12 +115,12 @@ public class MyPongModel implements PongModel {
                 switch(i.dir) {
                     case UP:
                         if((this.leftPos - (this.leftHeight/2)) >= 0){
-                        this.leftPos-=5;
+                        this.leftPos-=10;
                         }
                         break;
                     case DOWN:
                         if((this.leftPos + (this.leftHeight/2)) <= this.field.height){
-                        this.leftPos+=5;
+                        this.leftPos+=10;
                     }   
                         break;
                     }
@@ -123,19 +129,20 @@ public class MyPongModel implements PongModel {
                     switch(i.dir) {
                     case UP:
                         if((this.rightPos - (this.rightHeight/2)) >= 0){
-                        this.rightPos-=5;
+                        this.rightPos-=10;
                     }
                         break;
                     case DOWN:
                         if((this.rightPos + (this.rightHeight/2)) <= this.field.height)
-                        this.rightPos+=5;
+                        this.rightPos+=10;
                         break;
                     }
             	break;       
 	    }
         }
 
-    	moveBall();	
+    	moveBall();
+        speedUpCounter++;	
     }
     // -1 * [0,10]
     // (Math.round(10 * Math.cos(this.xAngle))).intValue()
@@ -147,44 +154,68 @@ Integer terrible = (int) (long) l;
     */
     
     public void moveBall() {
+        if (speedUpCounter % 1000 == 0) {
+            speed++;
+        }
+        double ballY = this.ball.getY();
+        int leftBarLower = this.leftPos + this.leftHeight/2;
+        int leftBarHigher = this.leftPos - this.leftHeight/2;
+
         // Everything regarding left movement:
         if (this.ballDirectionX == -1) {
-            if (this.ball.getX() == 10) {
-                if (((this.ball.getY() - 10) <= (this.leftPos + this.leftHeight/2)) && (this.ball.getY() + 10) > this.leftPos - this.leftHeight/2) {
+            if (this.ball.getX() <= 10 && this.ball.getX() > 0) {
+                if (((ballY - 10) <= leftBarLower) && (ballY + 10) > leftBarHigher) {
+                    if ((ballY - 10) >= (leftBarLower - 10) || (ballY + 10) <= (leftBarHigher + 10)) {
+                        this.yAngle = 5;
+                        if (this.ballDirectionY == -1) {this.ballDirectionY = 1;}
+                        if (this.ballDirectionY == 1) {this.ballDirectionY = -1;}
+                    }
+                    if ((((ballY - 10) < (leftBarLower - 10)) && ((ballY - 10) >= (leftBarLower - 20))) || (((ballY + 10) < (leftBarHigher + 10)) && ((ballY + 10) >= (leftBarHigher + 20)))) {
+                        this.yAngle = 4;
+                        if (this.ballDirectionY == -1) {this.ballDirectionY = 1;}
+                        if (this.ballDirectionY == 1) {this.ballDirectionY = -1;}
+                    }
+                    if ((((ballY - 10) < (leftBarLower - 10)) && ((ballY - 10) >= (leftBarLower - 30))) || (((ballY + 10) < (leftBarHigher + 20)) && ((ballY + 10) >= (leftBarHigher + 30)))) {
+                        this.yAngle = 3;
+                        if (this.ballDirectionY == -1) {this.ballDirectionY = 1;}
+                        if (this.ballDirectionY == 1) {this.ballDirectionY = -1;}
+                    }                    
+
+
                     this.ballDirectionX = 1;
                 }
             }
-            if (this.ball.getX() == 0) {
+            if (this.ball.getX() <= 0) {
                     resetBall();
                     this.rightScore++;
                 }
             if (this.ball.getX() > 0) {
-                this.ball.translate(-1 * this.xAngle, 0);
+                this.ball.translate((-1 * this.xAngle) * speed, 0);
             }            
         }   
         
         // Everything regarding right movement:
         if (this.ballDirectionX == 1) {
-            if (this.ball.getX() == (this.field.getWidth() - 10)) {
+            if (this.ball.getX() >= (this.field.getWidth() - 10) && this.ball.getX() < (this.field.getWidth())) {
                 if (((this.ball.getY() - 10) <= (this.rightPos + this.rightHeight/2)) && (this.ball.getY() + 10) > (this.rightPos - this.rightHeight/2)) {
                     this.ballDirectionX = -1;
                 }
             }
-            if (this.ball.getX() == this.field.getWidth()) {
+            if (this.ball.getX() >= this.field.getWidth()) {
                 resetBall();
                 this.leftScore++;
                 }
             if (this.ball.getX() < this.field.getWidth()) {
-                this.ball.translate(1 * this.xAngle, 0);
+                this.ball.translate((1 * this.xAngle) * speed, 0);
             }
         }
 
         // Everything regarding 'up' movement:
         if (this.ballDirectionY == -1) {
             if (this.ball.getY() > 0) {
-                this.ball.translate(0, -1 * this.yAngle);
+                this.ball.translate(0, (-1 * this.yAngle) * speed);
             }
-            if(this.ball.getY() == 0) {
+            if(this.ball.getY() <= 0) {
                 this.ballDirectionY = 1;
             }
         }
@@ -192,9 +223,9 @@ Integer terrible = (int) (long) l;
         // Everything regarding 'down' movement:
         if (this.ballDirectionY == 1) {
             if (this.ball.getY() < this.field.getHeight()) {
-                this.ball.translate(0, 1 * this.yAngle);
+                this.ball.translate(0, (1 * this.yAngle) * speed);
             }
-            if (this.ball.getY() == this.field.getHeight()) {
+            if (this.ball.getY() >= this.field.getHeight()) {
                 this.ballDirectionY = -1;
             }
         }
