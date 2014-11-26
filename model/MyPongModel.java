@@ -38,7 +38,7 @@ public class MyPongModel implements PongModel {
 
 		// Lots of this.variables
         this.field = new Dimension(600, 400);
-        this.ball = new Point(30000,200);
+        this.ball = new Point(300,200);
         this.leftPos = 200;
         this.leftHeight = 100;
         this.rightPos = 200;
@@ -49,12 +49,11 @@ public class MyPongModel implements PongModel {
         this.s2 = s2;
 
 
-        int dir1 = (randomized.nextInt(3) + 1);
+        int dir1 = (randomized.nextInt(2) + 1);
         int dir2 = (randomized.nextInt(3) + 1);
         int dirX;
         if (dir1 == 2) {dirX = 1;}
-        else if (dir1 == 1) {dirX = -1;}
-        else {dirX = 0;}
+        else {dirX = -1;}
         int dirY;
         if (dir2 == 2) {dirY = 1;}
         else if (dir2 == 1) {dirY = -1;}
@@ -63,23 +62,23 @@ public class MyPongModel implements PongModel {
 	    this.ballDirectionX = dirX;
 	    this.ballDirectionY = dirY;
 
-        int ang1 = (randomized.nextInt(90) + 0);
-        int ang2 = 90 - ang1;
-        this.xAngle = ang1;
-        this.yAngle = ang2;
-	
+        
+        int ang1 = (randomized.nextInt(5) + 0);
+        int ang2 = 10 - ang1;
+        this.xAngle = ang2;
+        this.yAngle = ang1;
+	   
 
     }
 
     public void resetBall(){
     Random randomized = new Random();
-    int dir1 = (randomized.nextInt(3) + 1);
+    int dir1 = (randomized.nextInt(2) + 1);
     int dir2 = (randomized.nextInt(3) + 1);
 
     int dirX;
     if (dir1 == 2) {dirX = 1;}
-    else if (dir1 == 1) {dirX = -1;}
-    else {dirX = 0;}
+    else {dirX = -1;}
 
     int dirY;
     if (dir2 == 2) {dirY = 1;}
@@ -90,11 +89,12 @@ public class MyPongModel implements PongModel {
 	this.ballDirectionX = dirX;
 	this.ballDirectionY = dirY;
 
-    int ang1 = (randomized.nextInt(90) + 0);
-    int ang2 = 90 - ang1;
+    
+    int ang1 = (randomized.nextInt(5) + 0);
+    int ang2 = 10 - ang1;
     this.xAngle = ang1;
     this.yAngle = ang2;
-
+    
 }
     /**
      * Takes the inputs and applies them to the model, computing one
@@ -137,45 +137,52 @@ public class MyPongModel implements PongModel {
 
     	moveBall();	
     }
-    
+    // -1 * [0,10]
+    // (Math.round(10 * Math.cos(this.xAngle))).intValue()
+    /*
+ Long l = 123L;
+Integer correctButComplicated = Integer.valueOf(l.intValue());
+Integer withBoxing = l.intValue();
+Integer terrible = (int) (long) l;
+    */
     
     public void moveBall() {
         // Everything regarding left movement:
         if (this.ballDirectionX == -1) {
-            if (this.ball.getX() > 0) {
-                this.ball.translate(-5*Math.round(Math.cos(this.xAngle)),0);
-            }
-            if (this.ball.getX() == 0) {
-                    resetBall();
-                    this.rightScore++;
-                }
             if (this.ball.getX() == 10) {
                 if (((this.ball.getY() - 10) <= (this.leftPos + this.leftHeight/2)) && (this.ball.getY() + 10) > this.leftPos - this.leftHeight/2) {
                     this.ballDirectionX = 1;
                 }
             }
+            if (this.ball.getX() == 0) {
+                    resetBall();
+                    this.rightScore++;
+                }
+            if (this.ball.getX() > 0) {
+                this.ball.translate(-1 * this.xAngle, 0);
+            }            
         }   
         
         // Everything regarding right movement:
         if (this.ballDirectionX == 1) {
-            if (this.ball.getX() < this.field.getWidth()) {
-                this.ball.translate(5*Math.round(Math.cos(this.xAngle)),0);
+            if (this.ball.getX() == (this.field.getWidth() - 10)) {
+                if (((this.ball.getY() - 10) <= (this.rightPos + this.rightHeight/2)) && (this.ball.getY() + 10) > (this.rightPos - this.rightHeight/2)) {
+                    this.ballDirectionX = -1;
+                }
             }
             if (this.ball.getX() == this.field.getWidth()) {
                 resetBall();
                 this.leftScore++;
                 }
-            if (this.ball.getX() == (this.field.getWidth() - 10)) {
-                if (((this.ball.getY() - 10) <= (this.rightPos + this.rightHeight/2)) && (this.ball.getY() + 10) > (this.rightPos - this.rightHeight/2)) {
-                    this.ballDirectionX = -1;
-                }
+            if (this.ball.getX() < this.field.getWidth()) {
+                this.ball.translate(1 * this.xAngle, 0);
             }
         }
 
         // Everything regarding 'up' movement:
         if (this.ballDirectionY == -1) {
             if (this.ball.getY() > 0) {
-                this.ball.translate(0,-5*Math.round(Math.sin(this.yAngle)));
+                this.ball.translate(0, -1 * this.yAngle);
             }
             if(this.ball.getY() == 0) {
                 this.ballDirectionY = 1;
@@ -185,7 +192,7 @@ public class MyPongModel implements PongModel {
         // Everything regarding 'down' movement:
         if (this.ballDirectionY == 1) {
             if (this.ball.getY() < this.field.getHeight()) {
-                this.ball.translate(0,5*Math.round(Math.sin(this.yAngle)));
+                this.ball.translate(0, 1 * this.yAngle);
             }
             if (this.ball.getY() == this.field.getHeight()) {
                 this.ballDirectionY = -1;
