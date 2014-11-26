@@ -131,14 +131,12 @@ public class MyPongModel implements PongModel {
                     resetBall();
                     this.rightScore++;
                 }
-            
-            if (((this.ball.getY() - 10) <= (this.leftPos + this.leftHeight/2)) && (this.ball.getY() + 10) > this.leftPos - this.leftHeight/2) {
-                if (this.ball.getX() == 10) {
+            if (this.ball.getX() == 10) {
+                if (((this.ball.getY() - 10) <= (this.leftPos + this.leftHeight/2)) && (this.ball.getY() + 10) > this.leftPos - this.leftHeight/2) {
                     this.ballDirectionX = 1;
                 }
             }
         }   
-
         
         // Everything regarding right movement:
         if (this.ballDirectionX == 1) {
@@ -149,8 +147,8 @@ public class MyPongModel implements PongModel {
                 resetBall();
                 this.leftScore++;
                 }
-            if (((this.ball.getY() - 10) <= (this.rightPos + this.rightHeight/2)) && (this.ball.getY() + 10) > (this.rightPos - this.rightHeight/2)) {
-                if (this.ball.getX() == this.field.getWidth() - 10) {
+            if (this.ball.getX() == (this.field.getWidth() - 10)) {
+                if (((this.ball.getY() - 10) <= (this.rightPos + this.rightHeight/2)) && (this.ball.getY() + 10) > (this.rightPos - this.rightHeight/2)) {
                     this.ballDirectionX = -1;
                 }
             }
