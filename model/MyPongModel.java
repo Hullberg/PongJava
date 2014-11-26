@@ -90,50 +90,74 @@ public class MyPongModel implements PongModel {
 	    }
         }
 
-    	moveBall();	
+    	jMoveBall();	
     }
 
     public void moveBall(){
+    if ((this.ball.getX() <= this.field.getWidth()) && this.ballDirectionX == 1 ){    
 
-	if ((this.ball.getX() <= this.field.getWidth()) && this.ballDirectionX == 1 ){	  
-
-	    if (this.ball.getX() == this.field.getWidth()) {
-		this.ballDirectionX = -1;
+        if (this.ball.getX() == this.field.getWidth()) {
+        this.ballDirectionX = -1;
 
     }
-	    this.ball.translate(5,0);
+        this.ball.translate(5,0);
 
-	}
-	else if (this.ball.getX() >= 0){
-	    this.ball.translate(-5,0);
-	    if ((this.ball.getY() <= (this.rightPos + this.rightHeight)) && this.ball.getY() > (this.rightPos - this.rightHeight)){
-		this.ballDirectionX = -1;	
-	    }
-	    else if (this.ball.getX() == this.field.getWidth()){
-		resetBall();
-		this.leftScore++;
-	    }
-	}
+    }
+    else if (this.ball.getX() >= 0){
+        this.ball.translate(-5,0);
+        if ((this.ball.getY() <= (this.rightPos + this.rightHeight)) && this.ball.getY() > (this.rightPos - this.rightHeight)){
+        this.ballDirectionX = -1;   
+        }
+        else if (this.ball.getX() == this.field.getWidth()){
+        resetBall();
+        this.leftScore++;
+        }
+    }
 
-	if ((this.ball.getY() <= this.field.getHeight()) && this.ballDirectionY == 1){
-	    this.ball.translate(0,5);
-}
-	
+    if ((this.ball.getY() <= this.field.getHeight()) && this.ballDirectionY == 1){
+        this.ball.translate(0,5);
     }
     
-    /**
-     * Method to move the ball. If x below 0 or x above 1200, increaseScore(RIGHT) or increaseScore(LEFT)
-     */
-    /*
-    public void changeDirection(int dir) {
-        if (dir == 1)
-            this.ballDirection = 2;
-        else if (dir == 2)
-            this.ballDirection = 1;
-        else this.ballDirection = 0;
     }
     
-    */
+    
+    public void jMoveBall() {
+        // Everything regarding left movement:
+        if (this.ballDirectionX == -1) {
+            if (this.ball.getX() > 0) {
+                this.ball.translate(-5,0);
+            }
+            if (this.ball.getX() == 0) {
+                    resetBall();
+                    this.rightScore++;
+                }
+            
+            if (((this.ball.getY() - 10) <= (this.leftPos + this.leftHeight/2)) && (this.ball.getY() + 10) > this.leftPos - this.leftHeight/2) {
+                if (this.ball.getX() == 10) {
+                    this.ballDirectionX = 1;
+                }
+            }
+        }   
+
+        
+        // Everything regarding right movement:
+        if (this.ballDirectionX == 1) {
+            if (this.ball.getX() < this.field.getWidth()) {
+                this.ball.translate(5,0);
+            }
+            if (this.ball.getX() == this.field.getWidth()) {
+                resetBall();
+                this.leftScore++;
+                }
+            if (((this.ball.getY() - 10) <= (this.rightPos + this.rightHeight/2)) && (this.ball.getY() + 10) > (this.rightPos - this.rightHeight/2)) {
+                if (this.ball.getX() == this.field.getWidth() - 10) {
+                    this.ballDirectionX = -1;
+                }
+            }
+        }
+    }
+
+    
     /**
      * getters that take a BarKey LEFT or RIGHT
      * and return positions of the various items on the board
