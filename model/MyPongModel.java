@@ -115,12 +115,12 @@ public class MyPongModel implements PongModel {
                 switch(i.dir) {
                     case UP:
                         if((this.leftPos - (this.leftHeight/2)) >= 0){
-                        this.leftPos-=10;
+                        this.leftPos -= (10 * speed);
                         }
                         break;
                     case DOWN:
                         if((this.leftPos + (this.leftHeight/2)) <= this.field.height){
-                        this.leftPos+=10;
+                        this.leftPos += (10 * speed);
                     }   
                         break;
                     }
@@ -129,12 +129,12 @@ public class MyPongModel implements PongModel {
                     switch(i.dir) {
                     case UP:
                         if((this.rightPos - (this.rightHeight/2)) >= 0){
-                        this.rightPos-=10;
+                        this.rightPos -= (10 * speed);
                     }
                         break;
                     case DOWN:
                         if((this.rightPos + (this.rightHeight/2)) <= this.field.height)
-                        this.rightPos+=10;
+                        this.rightPos += (10 * speed);
                         break;
                     }
             	break;       
@@ -143,6 +143,7 @@ public class MyPongModel implements PongModel {
 
     	moveBall();
         speedUpCounter++;	
+
     }
     // -1 * [0,10]
     // (Math.round(10 * Math.cos(this.xAngle))).intValue()
@@ -154,33 +155,55 @@ Integer terrible = (int) (long) l;
     */
     
     public void moveBall() {
-        if (speedUpCounter % 1000 == 0) {
+
+        if (speedUpCounter % 800 == 0) {
             speed++;
         }
+
         double ballY = this.ball.getY();
         int leftBarLower = this.leftPos + this.leftHeight/2;
         int leftBarHigher = this.leftPos - this.leftHeight/2;
 
+        double ballX = this.ball.getX();
+        int rightBarLower = this.rightPos + this.rightHeight/2;
+        int rightBarHigher = this.leftPos - this.leftHeight/2;
+
         // Everything regarding left movement:
         if (this.ballDirectionX == -1) {
-            if (this.ball.getX() <= 10 && this.ball.getX() > 0) {
-                if (((ballY - 10) <= leftBarLower) && (ballY + 10) > leftBarHigher) {
-                    if ((ballY - 10) >= (leftBarLower - 10) || (ballY + 10) <= (leftBarHigher + 10)) {
+            if (this.ball.getX() <= 10 && this.ball.getX() > 0) { //if within range of field
+                if (((ballY - 10) <= leftBarLower) && (ballY + 10) >= leftBarHigher) {  //if hitting barkey
+                    if ((ballY - 10) >= (leftBarLower - 5)) {   //if hitting lower five
                         this.yAngle = 5;
-                        if (this.ballDirectionY == -1) {this.ballDirectionY = 1;}
-                        if (this.ballDirectionY == 1) {this.ballDirectionY = -1;}
+                        this.xAngle = 5;
+                        this.ballDirectionY = 1;
                     }
-                    if ((((ballY - 10) < (leftBarLower - 10)) && ((ballY - 10) >= (leftBarLower - 20))) || (((ballY + 10) < (leftBarHigher + 10)) && ((ballY + 10) >= (leftBarHigher + 20)))) {
-                        this.yAngle = 4;
-                        if (this.ballDirectionY == -1) {this.ballDirectionY = 1;}
-                        if (this.ballDirectionY == 1) {this.ballDirectionY = -1;}
+                    if ((ballY + 10) <= (leftBarHigher + 5)) {  //if hitting higher five
+                        this.yAngle = 5;
+                        this.xAngle = 5;
+                        this.ballDirectionY = -1;
                     }
-                    if ((((ballY - 10) < (leftBarLower - 10)) && ((ballY - 10) >= (leftBarLower - 30))) || (((ballY + 10) < (leftBarHigher + 20)) && ((ballY + 10) >= (leftBarHigher + 30)))) {
-                        this.yAngle = 3;
-                        if (this.ballDirectionY == -1) {this.ballDirectionY = 1;}
-                        if (this.ballDirectionY == 1) {this.ballDirectionY = -1;}
-                    }                    
 
+                    if ((((ballY - 10) < (leftBarLower - 5)) && ((ballY - 10) >= (leftBarLower - 15)))) {
+                        this.yAngle = 4;
+                        this.xAngle = 6;
+                        this.ballDirectionY = 1;
+                    }
+                    if (((ballY + 10) > (leftBarHigher + 5)) && ((ballY + 10) <= (leftBarHigher + 15))) {
+                        this.yAngle = 4;
+                        this.xAngle = 6;
+                        this.ballDirectionY = -1;
+                    }
+
+                    if (((ballY - 10) < (leftBarLower - 15)) && ((ballY - 10) >= (leftBarLower - 30))) {
+                        this.yAngle = 3;
+                        this.xAngle = 7;
+                        this.ballDirectionY = 1;
+                    }                    
+                    if (((ballY + 10) > (leftBarHigher + 15)) && ((ballY + 10) <= (leftBarHigher + 30))) {
+                        this.yAngle = 3;
+                        this.xAngle = 7;
+                        this.ballDirectionY = -1;
+                    }
 
                     this.ballDirectionX = 1;
                 }
@@ -196,9 +219,47 @@ Integer terrible = (int) (long) l;
         
         // Everything regarding right movement:
         if (this.ballDirectionX == 1) {
-            if (this.ball.getX() >= (this.field.getWidth() - 10) && this.ball.getX() < (this.field.getWidth())) {
+            /* if (this.ball.getX() >= (this.field.getWidth() - 10) && this.ball.getX() < (this.field.getWidth())) {
                 if (((this.ball.getY() - 10) <= (this.rightPos + this.rightHeight/2)) && (this.ball.getY() + 10) > (this.rightPos - this.rightHeight/2)) {
                     this.ballDirectionX = -1;
+                }
+            } */
+            if (this.ball.getX() >= (this.field.getWidth() - 10) && this.ball.getX() < this.field.getWidth()) { //if within range of field
+                if (((ballY - 10) <= rightBarLower) && (ballY + 10) >= rightBarHigher) {  //if hitting barkey
+                    if ((ballY - 10) >= (rightBarLower - 5)) {   //if hitting lower five
+                        this.yAngle = 5;
+                        this.xAngle = 5;
+                        this.ballDirectionY = 1;
+                    }
+                    if ((ballY + 10) <= (rightBarHigher + 5)) {  //if hitting higher five
+                        this.yAngle = 5;
+                        this.xAngle = 5;
+                        this.ballDirectionY = -1;
+                    }
+
+                    if ((((ballY - 10) < (rightBarLower - 5)) && ((ballY - 10) >= (rightBarLower - 15)))) {
+                        this.yAngle = 4;
+                        this.xAngle = 6;
+                        this.ballDirectionY = 1;
+                    }
+                    if (((ballY + 10) > (rightBarHigher + 5)) && ((ballY + 10) <= (rightBarHigher + 15))) {
+                        this.yAngle = 4;
+                        this.xAngle = 6;
+                        this.ballDirectionY = -1;
+                    }
+
+                    if (((ballY - 10) < (rightBarLower - 15)) && ((ballY - 10) >= (rightBarLower - 30))) {
+                        this.yAngle = 3;
+                        this.xAngle = 7;
+                        this.ballDirectionY = 1;
+                    }                    
+                    if (((ballY + 10) > (rightBarHigher + 15)) && ((ballY + 10) <= (rightBarHigher + 30))) {
+                        this.yAngle = 3;
+                        this.xAngle = 7;
+                        this.ballDirectionY = -1;
+                    }
+
+                    this.ballDirectionX = 1;
                 }
             }
             if (this.ball.getX() >= this.field.getWidth()) {
@@ -212,20 +273,20 @@ Integer terrible = (int) (long) l;
 
         // Everything regarding 'up' movement:
         if (this.ballDirectionY == -1) {
-            if (this.ball.getY() > 0) {
+            if (this.ball.getY() > 10) {
                 this.ball.translate(0, (-1 * this.yAngle) * speed);
             }
-            if(this.ball.getY() <= 0) {
+            if(this.ball.getY() <= 10) {
                 this.ballDirectionY = 1;
             }
         }
 
         // Everything regarding 'down' movement:
         if (this.ballDirectionY == 1) {
-            if (this.ball.getY() < this.field.getHeight()) {
+            if (this.ball.getY() < this.field.getHeight() - 10) {
                 this.ball.translate(0, (1 * this.yAngle) * speed);
             }
-            if (this.ball.getY() >= this.field.getHeight()) {
+            if (this.ball.getY() >= this.field.getHeight() - 10) {
                 this.ballDirectionY = -1;
             }
         }
