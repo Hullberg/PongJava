@@ -99,7 +99,7 @@ public class MyPongModel implements PongModel {
     this.yAngle = ang1;
 
     this.speedUpCounter = 1;
-    this.speed = 1;
+    this.speed = 0;
     
 }
     /**
@@ -119,6 +119,8 @@ public class MyPongModel implements PongModel {
 	
 	    this.leftScore = 0;
 	    this.rightScore = 0;
+        this.leftHeight = 100;
+        this.rightHeight = 100;
 	    resetBall();
 	    	    
 	}	
@@ -130,7 +132,8 @@ public class MyPongModel implements PongModel {
 	    }
 	    this.leftScore = 0;
 	    this.rightScore = 0;
-	    resetBall();
+        this.leftHeight = 100;
+        this.rightHeight = 100;
 	    resetBall();
 	   
 	    	    
@@ -141,12 +144,12 @@ public class MyPongModel implements PongModel {
                 switch(i.dir) {
                     case UP:
                         if((this.leftPos - (this.leftHeight/2)) >= 0){
-                        this.leftPos -= (10 * speed);
+                        this.leftPos -= 10;
                         }
                         break;
                     case DOWN:
                         if((this.leftPos + (this.leftHeight/2)) <= this.field.height){
-                        this.leftPos += (10 * speed);
+                        this.leftPos += 10;
                     }   
                         break;
                     }
@@ -155,12 +158,12 @@ public class MyPongModel implements PongModel {
                     switch(i.dir) {
                     case UP:
                         if((this.rightPos - (this.rightHeight/2)) >= 0){
-                        this.rightPos -= (10 * speed);
+                        this.rightPos -= 10;
                     }
                         break;
                     case DOWN:
                         if((this.rightPos + (this.rightHeight/2)) <= this.field.height)
-                        this.rightPos += (10 * speed);
+                        this.rightPos += 10;
                         break;
                     }
             	break;       
@@ -182,8 +185,8 @@ Integer terrible = (int) (long) l;
     
     public void moveBall() {
 
-        if (speedUpCounter % 800 == 0) {
-            speed++;
+        if (speedUpCounter % 500 == 0) {
+            speed += 3;
         }
         double ballY = this.ball.getY();
         int leftBarLower = this.leftPos + this.leftHeight/2;
@@ -235,10 +238,11 @@ Integer terrible = (int) (long) l;
             }
             if (this.ball.getX() <= 0) {
                     resetBall();
+                    this.leftHeight += 6;
                     this.rightScore++;
                 }
             if (this.ball.getX() > 0) {
-                this.ball.translate((-1 * this.xAngle) * speed, 0);
+                this.ball.translate((-1 * this.xAngle) - speed, 0);
             }            
         }   
         
@@ -288,19 +292,19 @@ Integer terrible = (int) (long) l;
                 }
             }
             if (this.ball.getX() >= this.field.getWidth()) {
-		System.out.println("Yep");
                 resetBall();
+                this.rightHeight += 6;
                 this.leftScore++;
                 }
             if (this.ball.getX() < this.field.getWidth()) {
-                this.ball.translate((1 * this.xAngle) * speed, 0);
+                this.ball.translate((1 * this.xAngle) + speed, 0);
             }
         }
 
         // Everything regarding 'up' movement:
         if (this.ballDirectionY == -1) {
             if (this.ball.getY() > 10) {
-                this.ball.translate(0, (-1 * this.yAngle) * speed);
+                this.ball.translate(0, (-1 * this.yAngle) - speed);
             }
             if(this.ball.getY() <= 10) {
                 this.ballDirectionY = 1;
@@ -310,7 +314,7 @@ Integer terrible = (int) (long) l;
         // Everything regarding 'down' movement:
         if (this.ballDirectionY == 1) {
             if (this.ball.getY() < this.field.getHeight() - 10) {
-                this.ball.translate(0, (1 * this.yAngle) * speed);
+                this.ball.translate(0, (1 * this.yAngle) + speed);
             }
             if (this.ball.getY() >= this.field.getHeight() - 10) {
                 this.ballDirectionY = -1;
@@ -362,13 +366,19 @@ Integer terrible = (int) (long) l;
 }
 	if (leftScore < rightScore){
 	    if (rightScore == 10){
-		return "Right player wins!";
+            if (leftScore == 0) {
+                return "Left player is completely crushed!";
+            }
+    		else return "Right player wins!";
 	    }
 	    return "Right player's in the lead!";
 	}
 	if (rightScore < leftScore) {
 	    if (leftScore == 10){
-		return "Left player wins!";
+            if (rightScore == 0) {
+                return "Right player is completely crushed!";
+            }
+		    else return "Left player wins!";
 	    }
 	    return "Left player's in the lead!";
 		    
