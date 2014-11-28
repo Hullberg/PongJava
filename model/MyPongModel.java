@@ -109,6 +109,32 @@ public class MyPongModel implements PongModel {
      * the items move at the same speed, regardless of the framerate.
      */
     public void compute(Set<Input> input, long delta_t) {
+
+	if (leftScore == 10){
+	    try {
+		Thread.sleep(3000);                 //1000 milliseconds is one second.
+	    } catch(InterruptedException ex) {
+		Thread.currentThread().interrupt();
+	    }
+	
+	    this.leftScore = 0;
+	    this.rightScore = 0;
+	    resetBall();
+	    	    
+	}	
+	if (rightScore == 10){
+	    try {
+		Thread.sleep(3000);                 //1000 milliseconds is one second.
+	    } catch(InterruptedException ex) {
+		Thread.currentThread().interrupt();
+	    }
+	    this.leftScore = 0;
+	    this.rightScore = 0;
+	    resetBall();
+	    resetBall();
+	   
+	    	    
+	}
         for (Input i: input) {
 	    switch(i.key){
 	        case LEFT:
@@ -159,14 +185,13 @@ Integer terrible = (int) (long) l;
         if (speedUpCounter % 800 == 0) {
             speed++;
         }
-
         double ballY = this.ball.getY();
         int leftBarLower = this.leftPos + this.leftHeight/2;
         int leftBarHigher = this.leftPos - this.leftHeight/2;
 
         double ballX = this.ball.getX();
         int rightBarLower = this.rightPos + this.rightHeight/2;
-        int rightBarHigher = this.leftPos - this.leftHeight/2;
+        int rightBarHigher = this.rightPos - this.rightHeight/2;
 
         // Everything regarding left movement:
         if (this.ballDirectionX == -1) {
@@ -238,31 +263,32 @@ Integer terrible = (int) (long) l;
                     }
 
                     if ((((ballY - 10) < (rightBarLower - 5)) && ((ballY - 10) >= (rightBarLower - 15)))) {
-                        this.yAngle = 4;
-                        this.xAngle = 6;
+                        this.yAngle = 6;
+                        this.xAngle = 4;
                         this.ballDirectionY = 1;
                     }
                     if (((ballY + 10) > (rightBarHigher + 5)) && ((ballY + 10) <= (rightBarHigher + 15))) {
-                        this.yAngle = 4;
-                        this.xAngle = 6;
+                        this.yAngle = 6;
+                        this.xAngle = 4;
                         this.ballDirectionY = -1;
                     }
 
                     if (((ballY - 10) < (rightBarLower - 15)) && ((ballY - 10) >= (rightBarLower - 30))) {
-                        this.yAngle = 3;
-                        this.xAngle = 7;
+                        this.yAngle = 7;
+                        this.xAngle = 3;
                         this.ballDirectionY = 1;
                     }                    
                     if (((ballY + 10) > (rightBarHigher + 15)) && ((ballY + 10) <= (rightBarHigher + 30))) {
-                        this.yAngle = 3;
-                        this.xAngle = 7;
+                        this.yAngle = 7;
+                        this.xAngle = 3;
                         this.ballDirectionY = -1;
                     }
 
-                    this.ballDirectionX = 1;
+                    this.ballDirectionX = -1;
                 }
             }
             if (this.ball.getX() >= this.field.getWidth()) {
+		System.out.println("Yep");
                 resetBall();
                 this.leftScore++;
                 }
@@ -327,8 +353,28 @@ Integer terrible = (int) (long) l;
      * Will output information about the state of the game to be
      * displayed to the players
      */
-	public String getMessage() {
-		return "Let's play some Pong!";
+    public String getMessage() {
+	if (leftScore == 0 && rightScore == 0){
+	    return "Let's play some Pong!";
+	}
+	if(leftScore == rightScore){
+	    return"It's a tie!";
+}
+	if (leftScore < rightScore){
+	    if (rightScore == 10){
+		return "Right player wins!";
+	    }
+	    return "Right player's in the lead!";
+	}
+	if (rightScore < leftScore) {
+	    if (leftScore == 10){
+		return "Left player wins!";
+	    }
+	    return "Left player's in the lead!";
+		    
+	}
+	return "";
+
     }
 
     /**
