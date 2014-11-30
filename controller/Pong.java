@@ -28,11 +28,11 @@ class Pong {
 
 class ControllerOptions {
     private int framerate = 30;
-    private String leftPlayer = "Left Player";
+    private String leftPlayer = "Left player";
     private char leftPlayerUp = 'w';
     private char leftPlayerDown = 's';
 
-    private String rightPlayer = "Right Player";
+    private String rightPlayer = "Right player";
     private char rightPlayerUp = 'i';
     private char rightPlayerDown = 'k';
     public ControllerOptions parse(String opt) {

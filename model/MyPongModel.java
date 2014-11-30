@@ -5,6 +5,10 @@ import java.util.Random;
 import java.awt.Point;
 import java.awt.Dimension;
 
+/**
+ * @details [The field, the ball, the BarKeys, the scores of both players, the name of said players, where the ball is heading and the speed it has.]
+ * 
+ */
 public class MyPongModel implements PongModel {
 
 // Lots of variables
@@ -29,11 +33,19 @@ public class MyPongModel implements PongModel {
     private int xAngle;
     private int yAngle;
 
-    private int speedUpCounter;
     private int speed;
+    private int barKeySpeed;
 
 /**
  * The PongModel keeps track of the bars, the ball and the game state.
+ */
+/**
+ * @details [Creates and resets the ball, moves the BarKeys and keeps score of the game.]
+ * 
+ * @param s1 [Name of left player]
+ * @param s2 [Name of right player]
+ * 
+ * @return [description]
  */
 	public MyPongModel (String s1, String s2) {
         Random randomized = new Random();
@@ -69,12 +81,15 @@ public class MyPongModel implements PongModel {
         this.xAngle = ang2;
         this.yAngle = ang1;
 
-        this.speedUpCounter = 1;
-        this.speed = 1;
+        this.speed = 0;
+        this.barKeySpeed = 0;
 	   
 
     }
 
+    /**
+     * @brief [Sets the ball in the middle of the field, with a randomized angle and direction]
+     */
     public void resetBall(){
     Random randomized = new Random();
     int dir1 = (randomized.nextInt(2) + 1);
@@ -98,8 +113,8 @@ public class MyPongModel implements PongModel {
     this.xAngle = ang2;
     this.yAngle = ang1;
 
-    this.speedUpCounter = 1;
     this.speed = 0;
+    this.barKeySpeed = 0;
     
 }
     /**
@@ -107,6 +122,12 @@ public class MyPongModel implements PongModel {
      * simulation step. delta_t is the time that has passed since the
      * last compute step -- use this in your time integration to have
      * the items move at the same speed, regardless of the framerate.
+     */
+    /**
+     * @details [Computes where the barkeys are and the position of the ball. Before that it checks if someone has won the game, if so it resets.]
+     * 
+     * @param input [Input from the keyboard]
+     * @param delta_t [No idea]
      */
     public void compute(Set<Input> input, long delta_t) {
 
@@ -144,12 +165,12 @@ public class MyPongModel implements PongModel {
                 switch(i.dir) {
                     case UP:
                         if((this.leftPos - (this.leftHeight/2)) >= 0){
-                        this.leftPos -= 10;
+                        this.leftPos = this.leftPos - 10 - this.barKeySpeed;
                         }
                         break;
                     case DOWN:
                         if((this.leftPos + (this.leftHeight/2)) <= this.field.height){
-                        this.leftPos += 10;
+                        this.leftPos = this.leftPos + 10 + this.barKeySpeed;
                     }   
                         break;
                     }
@@ -158,36 +179,27 @@ public class MyPongModel implements PongModel {
                     switch(i.dir) {
                     case UP:
                         if((this.rightPos - (this.rightHeight/2)) >= 0){
-                        this.rightPos -= 10;
+                        this.rightPos = this.rightPos - 10 - this.barKeySpeed;
                     }
                         break;
                     case DOWN:
                         if((this.rightPos + (this.rightHeight/2)) <= this.field.height)
-                        this.rightPos += 10;
+                        this.rightPos = this.rightPos + 10 + this.barKeySpeed;
                         break;
                     }
             	break;       
 	    }
         }
 
-    	moveBall();
-        speedUpCounter++;	
+    	moveBall();	
+
 
     }
-    // -1 * [0,10]
-    // (Math.round(10 * Math.cos(this.xAngle))).intValue()
-    /*
- Long l = 123L;
-Integer correctButComplicated = Integer.valueOf(l.intValue());
-Integer withBoxing = l.intValue();
-Integer terrible = (int) (long) l;
-    */
     
+    /**
+     * @details [Increases a speedup counter after each time the ball hits a BarKey, and moves the ball according to the current angle it is moving.]
+     */
     public void moveBall() {
-
-        if (speedUpCounter % 500 == 0) {
-            speed += 3;
-        }
         double ballY = this.ball.getY();
         int leftBarLower = this.leftPos + this.leftHeight/2;
         int leftBarHigher = this.leftPos - this.leftHeight/2;
@@ -232,17 +244,17 @@ Integer terrible = (int) (long) l;
                         this.xAngle = 7;
                         this.ballDirectionY = -1;
                     }
-
+                    this.speed += 1;
                     this.ballDirectionX = 1;
                 }
             }
             if (this.ball.getX() <= 0) {
                     resetBall();
-                    this.leftHeight += 6;
+                    this.leftHeight += 4;
                     this.rightScore++;
                 }
             if (this.ball.getX() > 0) {
-                this.ball.translate((-1 * this.xAngle) - speed, 0);
+                this.ball.translate((-1 * this.xAngle) - this.speed, 0);
             }            
         }   
         
@@ -287,24 +299,24 @@ Integer terrible = (int) (long) l;
                         this.xAngle = 3;
                         this.ballDirectionY = -1;
                     }
-
+                    this.speed += 1;
                     this.ballDirectionX = -1;
                 }
             }
             if (this.ball.getX() >= this.field.getWidth()) {
                 resetBall();
-                this.rightHeight += 6;
+                this.rightHeight += 4;
                 this.leftScore++;
                 }
             if (this.ball.getX() < this.field.getWidth()) {
-                this.ball.translate((1 * this.xAngle) + speed, 0);
+                this.ball.translate((1 * this.xAngle) + this.speed, 0);
             }
         }
 
         // Everything regarding 'up' movement:
         if (this.ballDirectionY == -1) {
             if (this.ball.getY() > 10) {
-                this.ball.translate(0, (-1 * this.yAngle) - speed);
+                this.ball.translate(0, (-1 * this.yAngle) - this.speed);
             }
             if(this.ball.getY() <= 10) {
                 this.ballDirectionY = 1;
@@ -314,18 +326,29 @@ Integer terrible = (int) (long) l;
         // Everything regarding 'down' movement:
         if (this.ballDirectionY == 1) {
             if (this.ball.getY() < this.field.getHeight() - 10) {
-                this.ball.translate(0, (1 * this.yAngle) + speed);
+                this.ball.translate(0, (1 * this.yAngle) + this.speed);
             }
             if (this.ball.getY() >= this.field.getHeight() - 10) {
                 this.ballDirectionY = -1;
             }
         }
+
+        if (3 % this.speed == 1) {
+            this.barKeySpeed++;
+        }
+
     }
 
     
     /**
      * getters that take a BarKey LEFT or RIGHT
      * and return positions of the various items on the board
+     */
+    /**
+     * @brief [The current location of the BarKey, how close to the top or bottom it is]
+     * 
+     * @param k [Left or Right BarKey]
+     * @return [Where the BarKey is at the moment]
      */
 	public int getBarPos(BarKey k) {
     	switch(k) {
@@ -338,6 +361,12 @@ Integer terrible = (int) (long) l;
         }
     }
 
+    /**
+     * @brief [The height of a BarKey]
+     * 
+     * @param k [Left or Right BarKey]
+     * @return [The height of said BarKey]
+     */
     public int getBarHeight(BarKey k) {
         switch(k) {
         case LEFT:
@@ -349,6 +378,10 @@ Integer terrible = (int) (long) l;
         }
 	}
 
+    /**
+     * @brief [Returns x- and y-values of the ball in the field]
+     * @return [The coordinates of the ball in the field]
+     */
 	public Point getBallPos() {
         return this.ball.getLocation();
     }
@@ -357,30 +390,34 @@ Integer terrible = (int) (long) l;
      * Will output information about the state of the game to be
      * displayed to the players
      */
+    /**
+     * @brief [Different messages at different scores.]
+     * @return [A string in the top middle, with different message depending on the current state of the game]
+     */
     public String getMessage() {
 	if (leftScore == 0 && rightScore == 0){
 	    return "Let's play some Pong!";
 	}
 	if(leftScore == rightScore){
 	    return"It's a tie!";
-}
+    }
 	if (leftScore < rightScore){
 	    if (rightScore == 10){
             if (leftScore == 0) {
-                return "Left player is completely crushed!";
+                return "" + this.s1 + " was completely crushed!";
             }
-    		else return "Right player wins!";
+    		else return "" + this.s2 + " wins!";
 	    }
-	    return "Right player's in the lead!";
+	    return "" + this.s2 + " is in the lead!";
 	}
 	if (rightScore < leftScore) {
 	    if (leftScore == 10){
             if (rightScore == 0) {
-                return "Right player is completely crushed!";
+                return "" + this.s2 + " was completely crushed!";
             }
-		    else return "Left player wins!";
+		    else return "" + this.s1 + " wins!";
 	    }
-	    return "Left player's in the lead!";
+	    return "" + this.s1 + " is in the lead!";
 		    
 	}
 	return "";
@@ -389,6 +426,12 @@ Integer terrible = (int) (long) l;
 
     /**
      * getter for the scores.
+     */
+    /**
+     * @brief [Retrieves the integer representing the score of a player, and turns it into a string for display.]
+     * 
+     * @param k [Right or Left BarKey]
+     * @return [A string representing the score, between 0 and 10.]
      */
 	public String getScore(BarKey k) {
         switch(k) {
@@ -401,6 +444,12 @@ Integer terrible = (int) (long) l;
         }
     }
 
+    /**
+     * @brief [Increases the current score of one of the two players.]
+     * 
+     * @param k [Right or Left BarKey]
+     * @return [Integer, representing the score of said player, is increased by one.]
+     */
     public int increaseScore(BarKey k) {
         switch(k) {
         case LEFT:
@@ -415,6 +464,10 @@ Integer terrible = (int) (long) l;
     /**
      * a valid implementation of the model will keep the field size
      * will remain constant forever.
+     */
+    /**
+     * @brief [Returns the x and y values of the gaming field]
+     * @return [X- and Y-values in the type of Dimension]
      */
 	public Dimension getFieldSize() {
         return this.field.getSize();
