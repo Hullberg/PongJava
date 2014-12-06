@@ -244,10 +244,10 @@ public class MyPongModel implements PongModel {
                         this.xAngle = 7;
                         this.ballDirectionY = -1;
                     }
-		    if(speed < 10){
-                    this.speed += 1;
-		    }
-                    this.barKeySpeed += 1;
+		            if(this.speed < 10){
+                        this.speed += 1;
+                        this.barKeySpeed += 1;
+                    }
                     this.ballDirectionX = 1;
                 }
             }
@@ -257,7 +257,12 @@ public class MyPongModel implements PongModel {
                     this.rightScore++;
                 }
             if (this.ball.getX() > 0) {
-                this.ball.translate((-1 * this.xAngle) - this.speed, 0);
+                if (this.ball.getX() > ((-1 * this.xAngle) - this.speed)) {
+                   this.ball.translate((-1 * this.xAngle) - this.speed, 0);
+                }
+                else if (this.ball.getX() <= (-1 * this.xAngle) - this.speed) {
+                    this.ball.setLocation(5, this.ball.getY());
+                }
             }            
         }   
         
@@ -302,8 +307,10 @@ public class MyPongModel implements PongModel {
                         this.xAngle = 3;
                         this.ballDirectionY = -1;
                     }
-                    this.speed += 1;
-                    this.barKeySpeed += 1;
+                    if (this.speed < 9) {
+                        this.speed += 1;
+                        this.barKeySpeed += 1;
+                    }
                     this.ballDirectionX = -1;
                 }
             }
@@ -313,7 +320,12 @@ public class MyPongModel implements PongModel {
                 this.leftScore++;
                 }
             if (this.ball.getX() < this.field.getWidth()) {
-                this.ball.translate((1 * this.xAngle) + this.speed, 0);
+                if (this.ball.getX() > (this.field.getWidth() - ((1 * this.xAngle) + this.speed))) {
+                   this.ball.translate((1 * this.xAngle) + this.speed, 0);
+                }
+                else if (this.ball.getX() <= (this.field.getWidth() - ((1 * this.xAngle) + this.speed))) {
+                    this.ball.setLocation(this.field.getWidth() - 5, this.ball.getY());
+                }
             }
         }
 
@@ -441,23 +453,6 @@ public class MyPongModel implements PongModel {
             return Integer.toString(this.rightScore);
         default:
             return "";
-        }
-    }
-
-    /**
-     * @brief [Increases the current score of one of the two players.]
-     * 
-     * @param k [Right or Left BarKey]
-     * @return [Integer, representing the score of said player, is increased by one.]
-     */
-    public int increaseScore(BarKey k) {
-        switch(k) {
-        case LEFT:
-            this.leftScore++;
-        case RIGHT:
-            this.rightScore++;
-        default:
-            return 0;
         }
     }
     
