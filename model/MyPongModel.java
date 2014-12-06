@@ -244,7 +244,9 @@ public class MyPongModel implements PongModel {
                         this.xAngle = 7;
                         this.ballDirectionY = -1;
                     }
+		    if(speed < 10){
                     this.speed += 1;
+		    }
                     this.barKeySpeed += 1;
                     this.ballDirectionX = 1;
                 }
