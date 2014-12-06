@@ -245,6 +245,7 @@ public class MyPongModel implements PongModel {
                         this.ballDirectionY = -1;
                     }
                     this.speed += 1;
+                    this.barKeySpeed += 1;
                     this.ballDirectionX = 1;
                 }
             }
@@ -300,6 +301,7 @@ public class MyPongModel implements PongModel {
                         this.ballDirectionY = -1;
                     }
                     this.speed += 1;
+                    this.barKeySpeed += 1;
                     this.ballDirectionX = -1;
                 }
             }
@@ -331,10 +333,6 @@ public class MyPongModel implements PongModel {
             if (this.ball.getY() >= this.field.getHeight() - 10) {
                 this.ballDirectionY = -1;
             }
-        }
-
-        if (3 % this.speed == 1) {
-            this.barKeySpeed++;
         }
 
     }
