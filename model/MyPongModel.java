@@ -446,6 +446,24 @@ public class MyPongModel implements PongModel {
             return "";
         }
     }
+	
+    /**
+     * @brief [Increases the current score of one of the two players.]
+     * 
+     * @param k [Right or Left BarKey]
+     * @return [Integer, representing the score of said player, is increased by one.]
+     */
+    public int increaseScore(BarKey k) {
+        switch(k) {
+        case LEFT:
+            this.leftScore++;
+        case RIGHT:
+            this.rightScore++;
+        default:
+            return 0;
+        }
+    }
+    
     
     /**
      * a valid implementation of the model will keep the field size
