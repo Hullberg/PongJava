@@ -210,6 +210,9 @@ public class MyPongModel implements PongModel {
 
         // Everything regarding left movement:
         if (this.ballDirectionX == -1) {
+            if ((this.ball.getX() <= (-1 * ((-1 * this.xAngle) - this.speed))) && (this.ball.getX() > 10)) {
+                this.ball.setLocation(5, this.ball.getY());
+            }
             if (this.ball.getX() <= 10 && this.ball.getX() > 0) { //if within range of field
                 if (((ballY - 10) <= leftBarLower) && (ballY + 10) >= leftBarHigher) {  //if hitting barkey
                     if ((ballY - 10) >= (leftBarLower - 5)) {   //if hitting lower five
@@ -257,18 +260,15 @@ public class MyPongModel implements PongModel {
                     this.rightScore++;
                 }
             if (this.ball.getX() > 0) {
-                //if (this.ball.getX() > (-1 * ((-1 * this.xAngle) - this.speed))) {
-                   //this.ball.translate((-1 * this.xAngle) - this.speed, 0);
-                //}
-                if ((this.ball.getX() <= (-1 * ((-1 * this.xAngle) - this.speed))) && (this.ball.getX() > 10)) {
-                    this.ball.setLocation(5, this.ball.getY());
-                }
                 this.ball.translate((-1 * this.xAngle) - this.speed, 0);
             }            
         }   
         
         // Everything regarding right movement:
         if (this.ballDirectionX == 1) {
+            if ((this.ball.getX() >= (this.field.getWidth() - ((1 * this.xAngle) + this.speed))) && (this.ball.getX() < (this.field.getWidth() - 10))) {
+                this.ball.setLocation(this.field.getWidth() - 5, this.ball.getY());
+            }
             if (this.ball.getX() >= (this.field.getWidth() - 10) && this.ball.getX() < this.field.getWidth()) { //if within range of field
                 if (((ballY - 10) <= rightBarLower) && (ballY + 10) >= rightBarHigher) {  //if hitting barkey
                     if ((ballY - 10) >= (rightBarLower - 5)) {   //if hitting lower five
@@ -316,12 +316,6 @@ public class MyPongModel implements PongModel {
                 this.leftScore++;
                 }
             if (this.ball.getX() < this.field.getWidth()) {
-                //if (this.ball.getX() < (this.field.getWidth() - ((1 * this.xAngle) + this.speed))) {
-                //   this.ball.translate((1 * this.xAngle) + this.speed, 0);
-                //}
-                if ((this.ball.getX() >= (this.field.getWidth() - ((1 * this.xAngle) + this.speed))) && (this.ball.getX() < (this.field.getWidth() - 10))) {
-                    this.ball.setLocation(this.field.getWidth() - 5, this.ball.getY());
-                }
                 this.ball.translate((1 * this.xAngle) + this.speed, 0);
             }
         }
