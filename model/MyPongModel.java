@@ -257,7 +257,7 @@ public class MyPongModel implements PongModel {
             if (this.ball.getX() <= 0) {
                     resetBall();
                     this.leftHeight += 4;
-                    this.rightScore++;
+                    this.increaseScore(BarKey.RIGHT);
                 }
             if (this.ball.getX() > 0) {
                 this.ball.translate((-1 * this.xAngle) - this.speed, 0);
@@ -313,7 +313,7 @@ public class MyPongModel implements PongModel {
             if (this.ball.getX() >= this.field.getWidth()) {
                 resetBall();
                 this.rightHeight += 4;
-                this.leftScore++;
+                this.increaseScore(BarKey.LEFT);
                 }
             if (this.ball.getX() < this.field.getWidth()) {
                 this.ball.translate((1 * this.xAngle) + this.speed, 0);
@@ -457,8 +457,10 @@ public class MyPongModel implements PongModel {
         switch(k) {
         case LEFT:
             this.leftScore++;
+            return 0;
         case RIGHT:
             this.rightScore++;
+            return 0;
         default:
             return 0;
         }
